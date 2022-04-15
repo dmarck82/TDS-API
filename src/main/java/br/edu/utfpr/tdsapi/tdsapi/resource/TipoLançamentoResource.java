@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -35,7 +36,7 @@ public class TipoLançamentoResource {
     }
 
     @PostMapping
-    public ResponseEntity<TipoLançamento> criar(@RequestBody TipoLançamento tipoLançamento, HttpServletResponse response){
+    public ResponseEntity<TipoLançamento> criar(@Valid @RequestBody TipoLançamento tipoLançamento, HttpServletResponse response){
         TipoLançamento tipoLançamentoSalvo = tipoLançamentoRepository.save(tipoLançamento);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequestUri().path("/{codigo}").buildAndExpand(tipoLançamento
         .getcodigotl()).toUri();

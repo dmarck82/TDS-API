@@ -5,6 +5,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 @Entity
 @Table(name ="endereço")
@@ -12,12 +14,19 @@ public class Endereço {
     
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long codigoe;
+    @NotNull @Size(min = 3, max = 60)
     private String logradouro;
+    @NotNull @Size(min = 1, max = 20)
     private String numero;
+    @NotNull @Size(min = 3, max = 50)
     private String complemento;
+    @NotNull @Size(min = 3, max = 30)
     private String bairro;
+    @NotNull @Size(min = 3, max = 10)
     private String cep;
+    @NotNull @Size(min = 3, max = 25)
     private String cidade;
+    @NotNull @Size(min = 3, max = 25)
     private String estado;
     private Long codigope;
     

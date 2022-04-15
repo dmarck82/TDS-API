@@ -5,6 +5,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "pessoa")
@@ -12,7 +14,9 @@ public class Pessoa {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long codigop;
+    @NotNull @Size(min = 3, max = 45)
     private String nome;
+    @NotNull
     private Boolean ativo;
     
     public Long getcodigop() {

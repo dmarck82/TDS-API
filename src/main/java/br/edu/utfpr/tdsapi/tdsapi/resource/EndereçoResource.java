@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -36,7 +37,7 @@ public class EndereçoResource {
     }
 
     @PostMapping
-    public ResponseEntity<Endereço> criar(@RequestBody Endereço endereço, HttpServletResponse response) {
+    public ResponseEntity<Endereço> criar(@Valid @RequestBody Endereço endereço, HttpServletResponse response) {
         Endereço endereçoSalvo = endereçoRepository.save(endereço);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequestUri().path("/{codigo}").buildAndExpand(endereçoSalvo
         .getcodigoe()).toUri();
