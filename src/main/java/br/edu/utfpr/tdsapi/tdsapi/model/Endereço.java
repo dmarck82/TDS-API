@@ -1,26 +1,19 @@
 package br.edu.utfpr.tdsapi.tdsapi.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.Embeddable;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-@Entity
-@Table(name ="endereço")
+@Embeddable
 public class Endereço {
-    
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long codigoe;
+
     @NotNull @Size(min = 3, max = 60)
     private String logradouro;
     @NotNull @Size(min = 1, max = 20)
     private String numero;
     @NotNull @Size(min = 3, max = 50)
     private String complemento;
-    @NotNull @Size(min = 3, max = 30)
+    @Size(min = 3, max = 30)
     private String bairro;
     @NotNull @Size(min = 3, max = 10)
     private String cep;
@@ -28,14 +21,7 @@ public class Endereço {
     private String cidade;
     @NotNull @Size(min = 3, max = 25)
     private String estado;
-    private Long codigope;
     
-    public Long getcodigoe() {
-        return codigoe;
-    }
-    public void setcodigoe(Long codigoe) {
-        this.codigoe = codigoe;
-    }
     public String getLogradouro() {
         return logradouro;
     }
@@ -77,36 +63,5 @@ public class Endereço {
     }
     public void setEstado(String estado) {
         this.estado = estado;
-    }
-    public Long getcodigope() {
-        return codigope;
-    }
-    public void setcodigope(Long codigope) {
-        this.codigope = codigope;
-    }
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((codigoe == null) ? 0 : codigoe.hashCode());
-        return result;
-    }
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        Endereço other = (Endereço) obj;
-        if (codigoe == null) {
-            if (other.codigoe != null)
-                return false;
-        } else if (!codigoe.equals(other.codigoe))
-            return false;
-        return true;
-    }
-
-    
+    }    
 }

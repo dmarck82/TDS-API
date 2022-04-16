@@ -1,6 +1,5 @@
 package br.edu.utfpr.tdsapi.tdsapi.resource;
 
-import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
@@ -8,6 +7,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -18,8 +18,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-
+import br.edu.utfpr.tdsapi.tdsapi.event.RecursoCriadoEvent;
 import br.edu.utfpr.tdsapi.tdsapi.model.Lançamento;
 import br.edu.utfpr.tdsapi.tdsapi.repository.LançamentoRepository;
 
@@ -31,6 +30,10 @@ public class LançamentoResource {
     @Autowired
     private LançamentoRepository lançamentoRepository;
 
+    @Autowired
+    private ApplicationEventPublisher publisher;
+
+
     @GetMapping
     public List<Lançamento> listar() {
         return lançamentoRepository.findAll();
@@ -38,28 +41,33 @@ public class LançamentoResource {
 
     @PostMapping
     public ResponseEntity<Lançamento> criar(@Valid @RequestBody Lançamento lançamento, HttpServletResponse response){
-        Lançamento lançamentoSalvo = lançamentoRepository.save(lançamento);
-        URI uri = ServletUriComponentsBuilder.fromCurrentRequestUri().path("/{codigo}").buildAndExpand(lançamentoSalvo
-        .getcodigol()).toUri();
-        response.setHeader("Location", uri.toASCIIString());
         
-        return ResponseEntity.created(uri).body(lançamentoSalvo); 
+        Lançamento lançamentoSalvo = lançamentoRepository.save(lançamento);
+        
+        publisher.publishEvent(new RecursoCriadoEvent(this, response, lançamentoSalvo.getcodigol()));
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(lançamentoSalvo);
     }
 
     @GetMapping("/{codigo}")
     public ResponseEntity <?> buscarPeloCodigo(@PathVariable Long codigo){
+        
         Optional<Lançamento> lançamento= this.lançamentoRepository.findById(codigo);
+        
         return lançamento.isPresent() ? ResponseEntity.ok(lançamento) : ResponseEntity.notFound().build();
     }
 
     @DeleteMapping("/{codigo}")
     public void deletarPeloCodigo(@PathVariable Long codigo){
+        
         lançamentoRepository.deleteById(codigo);
     }
 
     @PutMapping("/{codigo}")
     public ResponseEntity <Lançamento> alterarPeloCodigo(@RequestBody Lançamento lançamentoNovo, @PathVariable Long codigo){
+        
         Optional<Lançamento> lançamentoVelho = lançamentoRepository.findById(codigo);
+        
         if(lançamentoVelho.isPresent()){
             Lançamento lançamentoTemp = lançamentoVelho.get();
             lançamentoTemp.setDescricao(lançamentoNovo.getDescricao());

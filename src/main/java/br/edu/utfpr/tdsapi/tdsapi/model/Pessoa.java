@@ -1,5 +1,6 @@
 package br.edu.utfpr.tdsapi.tdsapi.model;
 
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -14,8 +15,13 @@ public class Pessoa {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long codigop;
+
     @NotNull @Size(min = 3, max = 45)
     private String nome;
+    
+    @Embedded
+    private Endereço endereço;
+
     @NotNull
     private Boolean ativo;
     
@@ -36,6 +42,13 @@ public class Pessoa {
     }
     public void setAtivo(Boolean ativo) {
         this.ativo = ativo;
+    }
+
+    public Endereço getEndereço() {
+        return endereço;
+    }
+    public void setEndereço(Endereço endereço) {
+        this.endereço = endereço;
     }
     @Override
     public int hashCode() {
