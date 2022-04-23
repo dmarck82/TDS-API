@@ -17,10 +17,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import br.edu.utfpr.tdsapi.tdsapi.event.RecursoCriadoEvent;
 import br.edu.utfpr.tdsapi.tdsapi.model.Categoria;
 import br.edu.utfpr.tdsapi.tdsapi.repository.CategoriaRepository;
+import br.edu.utfpr.tdsapi.tdsapi.service.CategoriaService;
 
 @RestController
 @RequestMapping("/categorias")
@@ -31,6 +33,9 @@ public class CategoriaResource {
 
     @Autowired
     private ApplicationEventPublisher publisher;
+
+    @Autowired
+    private CategoriaService categoriaService;
     
     @GetMapping
     public List<Categoria> listar() {
@@ -56,6 +61,7 @@ public class CategoriaResource {
     }
 
     @DeleteMapping("/{codigo}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deletarPeloCodigo(@PathVariable Long codigo){
         
         categoriaRepository.deleteById(codigo);
@@ -63,18 +69,11 @@ public class CategoriaResource {
     }
 
     @PutMapping("/{codigo}")
-    public ResponseEntity <Categoria> alterarPeloCodigo(@RequestBody Categoria categoriaNova, @PathVariable Long codigo){
+    public ResponseEntity <Categoria> atualizar(@PathVariable Long codigo, @Valid @RequestBody Categoria categoria){
         
-        Optional<Categoria> categoriaVelha = categoriaRepository.findById(codigo);
-        
-        if(categoriaVelha.isPresent()){
-            Categoria categoriaTemp = categoriaVelha.get();
-            categoriaTemp.setNome(categoriaNova.getNome());
-            categoriaRepository.save(categoriaTemp);
-            return new ResponseEntity<Categoria>(categoriaTemp, HttpStatus.OK);
-        }
-        else   
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        Categoria categoriaSalva = categoriaService.atualizar(codigo, categoria);
+
+        return ResponseEntity.ok(categoriaSalva);
 
     }
 }

@@ -17,10 +17,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import br.edu.utfpr.tdsapi.tdsapi.event.RecursoCriadoEvent;
 import br.edu.utfpr.tdsapi.tdsapi.model.Pessoa;
 import br.edu.utfpr.tdsapi.tdsapi.repository.PessoaRepository;
+import br.edu.utfpr.tdsapi.tdsapi.service.PessoaService;
 
 @RestController
 @RequestMapping("/pessoas")
@@ -31,6 +33,9 @@ public class PessoaResource {
 
     @Autowired
     private ApplicationEventPublisher publisher;
+
+    @Autowired
+    private PessoaService pessoaService;
 
     @GetMapping
     public List<Pessoa> listar(){
@@ -58,26 +63,23 @@ public class PessoaResource {
     }
 
     @DeleteMapping("/{codigo}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deletarPeloCodigo(@PathVariable Long codigo){
         
         pessoaRepository.deleteById(codigo);
     }
 
     @PutMapping("/{codigo}")
-    public ResponseEntity <Pessoa> alterarPeloCodigo(@RequestBody Pessoa pessoaNova, @PathVariable Long codigo){
+    public ResponseEntity<Pessoa> atualizar(@PathVariable Long codigo, @Valid @RequestBody Pessoa pessoa){
         
-        Optional<Pessoa> pessoaVelha = pessoaRepository.findById(codigo);
-
-        if(pessoaVelha.isPresent()){
-            Pessoa pessoaTemp = pessoaVelha.get();
-            pessoaTemp.setNome(pessoaNova.getNome());
-            pessoaTemp.setAtivo(pessoaNova.getAtivo());
-            pessoaTemp.setEndereço(pessoaNova.getEndereço());
-            pessoaRepository.save(pessoaTemp);
-            return new ResponseEntity<Pessoa>(pessoaTemp, HttpStatus.OK);
-        }
-        else   
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        Pessoa pessoaSalva = pessoaService.atualizar(codigo, pessoa);
+        return ResponseEntity.ok(pessoaSalva);
+    }
+    
+    @PutMapping("/{codigo}/ativo")
+    public void atualizarPropriedadeAtivo(@PathVariable Long codigo, @RequestBody Boolean ativo){
+        
+        pessoaService.atualizarPropriedadeAtivo(codigo, ativo);
     }
 
 }

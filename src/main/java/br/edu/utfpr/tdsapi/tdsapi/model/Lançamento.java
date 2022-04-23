@@ -1,14 +1,18 @@
 package br.edu.utfpr.tdsapi.tdsapi.model;
 
-import java.sql.Date;
+import java.math.BigDecimal;
+import java.time.LocalDate;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
 @Entity
 @Table(name="lancamento")
@@ -16,24 +20,34 @@ public class Lançamento {
     
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long codigol;
-    @NotNull @Size(min = 3, max = 45)
+
     private String descricao;
-    @NotNull
-    private Date datavencimento;
-    @NotNull
-    private Date datapagamento;
-    @NotNull
-    private Float valor;
-    @Size(min = 3, max = 50)
+
+    @Column(name = "data_vencimento")
+    private LocalDate datavencimento;
+
+    @Column(name = "data_pagamento")
+    private LocalDate datapagamento;
+
+    private BigDecimal valor;
+
     private String observacao;
-    private Long codigocl;
-    private Long codigotll;
-    private Long codigopl;
+
+    @Enumerated(EnumType.STRING)
+    private TipoLançamento tipo;
+
+    @ManyToOne
+    @JoinColumn(name = "codigo_categoria")
+    private Categoria categoria;
+
+    @ManyToOne
+    @JoinColumn(name = "codigo_pessoa")
+    private Pessoa pessoa;
     
-    public Long getcodigol() {
+    public Long getCodigol() {
         return codigol;
     }
-    public void setcodigol(Long codigol) {
+    public void setCodigol(Long codigol) {
         this.codigol = codigol;
     }
     public String getDescricao() {
@@ -42,22 +56,22 @@ public class Lançamento {
     public void setDescricao(String descricao) {
         this.descricao = descricao;
     }
-    public Date getDatavencimento() {
+    public LocalDate getDatavencimento() {
         return datavencimento;
     }
-    public void setDatavencimento(Date datavencimento) {
+    public void setDatavencimento(LocalDate datavencimento) {
         this.datavencimento = datavencimento;
     }
-    public Date getDatapagamento() {
+    public LocalDate getDatapagamento() {
         return datapagamento;
     }
-    public void setDatapagamento(Date datapagamento) {
+    public void setDatapagamento(LocalDate datapagamento) {
         this.datapagamento = datapagamento;
     }
-    public Float getValor() {
+    public BigDecimal getValor() {
         return valor;
     }
-    public void setValor(Float valor) {
+    public void setValor(BigDecimal valor) {
         this.valor = valor;
     }
     public String getObservacao() {
@@ -66,31 +80,33 @@ public class Lançamento {
     public void setObservacao(String observacao) {
         this.observacao = observacao;
     }
-    public Long getcodigocl() {
-        return codigocl;
+    public TipoLançamento getTipo() {
+        return tipo;
     }
-    public void setcodigocl(Long codigocl) {
-        this.codigocl = codigocl;
+    public void setTipo(TipoLançamento tipo) {
+        this.tipo = tipo;
     }
-    public Long getCodigoTLL() {
-        return codigotll;
+    public Categoria getCategoria() {
+        return categoria;
     }
-    public void setCodigoTLL(Long codigotll) {
-        this.codigotll = codigotll;
+    public void setCategoria(Categoria categoria) {
+        this.categoria = categoria;
     }
-    public Long getCodigoPL() {
-        return codigopl;
+    public Pessoa getPessoa() {
+        return pessoa;
     }
-    public void setCodigoPL(Long codigopl) {
-        this.codigopl = codigopl;
+    public void setPessoa(Pessoa pessoa) {
+        this.pessoa = pessoa;
     }
+    
     @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((codigocl == null) ? 0 : codigocl.hashCode());
+        result = prime * result + ((codigol == null) ? 0 : codigol.hashCode());
         return result;
     }
+    
     @Override
     public boolean equals(Object obj) {
         if (this == obj)
@@ -100,10 +116,10 @@ public class Lançamento {
         if (getClass() != obj.getClass())
             return false;
         Lançamento other = (Lançamento) obj;
-        if (codigocl == null) {
-            if (other.codigocl != null)
+        if (codigol == null) {
+            if (other.codigol != null)
                 return false;
-        } else if (!codigocl.equals(other.codigocl))
+        } else if (!codigol.equals(other.codigol))
             return false;
         return true;
     }

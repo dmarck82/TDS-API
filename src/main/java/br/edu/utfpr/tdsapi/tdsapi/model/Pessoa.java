@@ -57,6 +57,7 @@ public class Pessoa {
         result = prime * result + ((ativo == null) ? 0 : ativo.hashCode());
         return result;
     }
+    
     @Override
     public boolean equals(Object obj) {
         if (this == obj)

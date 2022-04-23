@@ -17,10 +17,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import br.edu.utfpr.tdsapi.tdsapi.event.RecursoCriadoEvent;
 import br.edu.utfpr.tdsapi.tdsapi.model.Lançamento;
 import br.edu.utfpr.tdsapi.tdsapi.repository.LançamentoRepository;
+import br.edu.utfpr.tdsapi.tdsapi.service.LançamentoService;
 
 @RestController
 @RequestMapping("/lançamentos")
@@ -33,6 +35,9 @@ public class LançamentoResource {
     @Autowired
     private ApplicationEventPublisher publisher;
 
+    @Autowired
+    private LançamentoService lançamentoService;
+
 
     @GetMapping
     public List<Lançamento> listar() {
@@ -44,7 +49,7 @@ public class LançamentoResource {
         
         Lançamento lançamentoSalvo = lançamentoRepository.save(lançamento);
         
-        publisher.publishEvent(new RecursoCriadoEvent(this, response, lançamentoSalvo.getcodigol()));
+        publisher.publishEvent(new RecursoCriadoEvent(this, response, lançamentoSalvo.getCodigol()));
 
         return ResponseEntity.status(HttpStatus.CREATED).body(lançamentoSalvo);
     }
@@ -58,27 +63,17 @@ public class LançamentoResource {
     }
 
     @DeleteMapping("/{codigo}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deletarPeloCodigo(@PathVariable Long codigo){
         
         lançamentoRepository.deleteById(codigo);
     }
 
     @PutMapping("/{codigo}")
-    public ResponseEntity <Lançamento> alterarPeloCodigo(@RequestBody Lançamento lançamentoNovo, @PathVariable Long codigo){
-        
-        Optional<Lançamento> lançamentoVelho = lançamentoRepository.findById(codigo);
-        
-        if(lançamentoVelho.isPresent()){
-            Lançamento lançamentoTemp = lançamentoVelho.get();
-            lançamentoTemp.setDescricao(lançamentoNovo.getDescricao());
-            lançamentoTemp.setDatavencimento(lançamentoNovo.getDatavencimento());
-            lançamentoTemp.setDatapagamento(lançamentoNovo.getDatapagamento());
-            lançamentoTemp.setValor(lançamentoNovo.getValor());
-            lançamentoTemp.setObservacao(lançamentoNovo.getObservacao());            
-            lançamentoRepository.save(lançamentoTemp);
-            return new ResponseEntity<Lançamento>(lançamentoTemp, HttpStatus.OK);
-        }
-        else   
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    public ResponseEntity<Lançamento> atualizar(@PathVariable Long codigo, @Valid @RequestBody Lançamento lançamento){
+
+        Lançamento lançamentoSalvo = lançamentoService.atualizar(codigo, lançamento);
+
+        return ResponseEntity.ok(lançamentoSalvo);
     }
 }
