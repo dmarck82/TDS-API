@@ -7,25 +7,32 @@ import javax.validation.constraints.Size;
 @Embeddable
 public class Endereço {
 
-    @NotNull @Size(min = 3, max = 60)
+    @NotNull
+    @Size(min = 3, max = 60)
     private String logradouro;
 
-    @NotNull @Size(min = 1, max = 20)
+    @NotNull
+    @Size(min = 1, max = 20)
     private String numero;
 
-    @NotNull @Size(min = 3, max = 50)
+    @NotNull
+    @Size(min = 3, max = 50)
     private String complemento;
 
+    @NotNull
     @Size(min = 3, max = 30)
     private String bairro;
 
-    @NotNull @Size(min = 3, max = 10)
+    @NotNull
+    @Size(min = 3, max = 10)
     private String cep;
 
-    @NotNull @Size(min = 3, max = 25)
+    @NotNull 
+    @Size(min = 3, max = 25)
     private String cidade;
     
-    @NotNull @Size(min = 3, max = 25)
+    @NotNull 
+    @Size(min = 3, max = 25)
     private String estado;
     
     public String getLogradouro() {

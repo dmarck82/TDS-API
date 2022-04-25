@@ -13,33 +13,46 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.Future;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 @Entity
 @Table(name="lancamento")
 public class Lançamento {
     
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id 
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long codigol;
 
+    @NotNull
+    @Size(min = 3, max = 50)
     private String descricao;
 
+    @NotNull
     @Column(name = "data_vencimento")
     private LocalDate datavencimento;
 
+    @Future
     @Column(name = "data_pagamento")
     private LocalDate datapagamento;
 
+    @NotNull
     private BigDecimal valor;
 
+    @Size(min = 3, max = 50)
     private String observacao;
 
+    @NotNull
     @Enumerated(EnumType.STRING)
     private TipoLançamento tipo;
 
+    @NotNull
     @ManyToOne
     @JoinColumn(name = "codigo_categoria")
     private Categoria categoria;
 
+    @NotNull
     @ManyToOne
     @JoinColumn(name = "codigo_pessoa")
     private Pessoa pessoa;

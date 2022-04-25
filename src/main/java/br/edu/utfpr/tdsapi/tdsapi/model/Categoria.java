@@ -14,7 +14,8 @@ import javax.validation.constraints.Size;
 public class Categoria {
 
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long codigoc;
 
     @NotNull
