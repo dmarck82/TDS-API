@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -27,6 +29,7 @@ import br.edu.utfpr.tdsapi.tdsapi.event.RecursoCriadoEvent;
 import br.edu.utfpr.tdsapi.tdsapi.exceptionhandler.TdsExceptionHandler.Erro;
 import br.edu.utfpr.tdsapi.tdsapi.model.Lançamento;
 import br.edu.utfpr.tdsapi.tdsapi.repository.LançamentoRepository;
+import br.edu.utfpr.tdsapi.tdsapi.repository.filter.LançamentoFilter;
 import br.edu.utfpr.tdsapi.tdsapi.service.LançamentoService;
 import br.edu.utfpr.tdsapi.tdsapi.service.exceção.PessoaInexistenteOuInativaException;
 
@@ -49,8 +52,8 @@ public class LançamentoResource {
 
 
     @GetMapping
-    public List<Lançamento> listar() {
-        return lançamentoRepository.findAll();
+    public Page<Lançamento> pesquisar(LançamentoFilter lançamentoFilter, Pageable pageable) {
+        return lançamentoRepository.filtrar(lançamentoFilter, pageable);
     }
 
     @GetMapping("/{codigo}")
