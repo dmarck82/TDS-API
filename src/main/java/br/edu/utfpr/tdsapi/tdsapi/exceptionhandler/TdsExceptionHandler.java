@@ -52,10 +52,12 @@ public class TdsExceptionHandler extends ResponseEntityExceptionHandler{
     protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex,
             HttpHeaders headers, HttpStatus status, WebRequest request) {
                 
-        String menssagemUsuario = messageSource.getMessage("mensagem.invalida", null, LocaleContextHolder.getLocale());
-        String menssagemDesenvolvedor = ex.getCause().toString();
+        String mensagemUsuario = messageSource.getMessage("mensagem.invalida", null, LocaleContextHolder.getLocale());
+        String mensagemDesenvolvedor = ex.getCause().toString();
         
-        return handleExceptionInternal(ex, new Erro(menssagemUsuario, menssagemDesenvolvedor), headers, HttpStatus.BAD_REQUEST, request);
+        List<Erro> erros = Arrays.asList(new Erro(mensagemUsuario, mensagemDesenvolvedor));
+
+        return handleExceptionInternal(ex, erros, headers, HttpStatus.BAD_REQUEST, request);
     }   
 
     @Override
@@ -69,10 +71,10 @@ public class TdsExceptionHandler extends ResponseEntityExceptionHandler{
     @ExceptionHandler({EmptyResultDataAccessException.class})
     protected ResponseEntity<Object> handleEmptyResultDataAcessException(EmptyResultDataAccessException ex, WebRequest request){
 
-        String menssagemUsuario = messageSource.getMessage("recurso.nao-encontrado", null, LocaleContextHolder.getLocale());
-        String menssagemDesenvolvedor = ex.toString();
+        String mensagemUsuario = messageSource.getMessage("recurso.nao-encontrado", null, LocaleContextHolder.getLocale());
+        String mensagemDesenvolvedor = ex.toString();
         
-        List<Erro> erros = Arrays.asList(new Erro(menssagemUsuario, menssagemDesenvolvedor));
+        List<Erro> erros = Arrays.asList(new Erro(mensagemUsuario, mensagemDesenvolvedor));
         return handleExceptionInternal(ex, erros, new HttpHeaders(), HttpStatus.NOT_FOUND, request);
     }
 

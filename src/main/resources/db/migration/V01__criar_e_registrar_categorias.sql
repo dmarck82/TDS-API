@@ -4,7 +4,8 @@ create table categoria(
     primary key (codigoc)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-INSERT INTO categoria (nome) VALUES ('Lazer');
-INSERT INTO categoria (nome) VALUES ('Informática');
-INSERT INTO categoria (nome) VALUES ('Saúde');
-INSERT INTO categoria (nome) VALUES ('Finanças');
+INSERT INTO categoria (nome) values ('Lazer');
+INSERT INTO categoria (nome) values ('Alimentação');
+INSERT INTO categoria (nome) values ('Supermercado');
+INSERT INTO categoria (nome) values ('Farmácia');
+INSERT INTO categoria (nome) values ('Outros');

@@ -2,16 +2,15 @@ package br.edu.utfpr.tdsapi.tdsapi.repository.lançamento;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Predicate;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
-import org.hibernate.Criteria;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -20,7 +19,7 @@ import org.springframework.util.StringUtils;
 import br.edu.utfpr.tdsapi.tdsapi.model.Lançamento;
 import br.edu.utfpr.tdsapi.tdsapi.repository.filter.LançamentoFilter;
 
-public class LançamentoRepositoryImpl implements LançamentoRepositoryQuery<Lançamento>{
+public class LançamentoRepositoryImpl implements LançamentoRepositoryQuery{
 
     @PersistenceContext
     private EntityManager manager;
@@ -39,16 +38,16 @@ public class LançamentoRepositoryImpl implements LançamentoRepositoryQuery<Lan
         
         adicionarRestriçoesPaginaçao(query, pageable);
 
-        return new PageImpl<>(query.getResultList(), pageable, total(lançamentoFilter))
+        return new PageImpl<>(query.getResultList(), pageable, total(lançamentoFilter));
     }
 
     private Predicate[] criarRestriçoes(LançamentoFilter lançamentoFilter, CriteriaBuilder builder, Root<Lançamento> root){
         
         List<Predicate> predicates = new ArrayList<>();
         
-        if(!StringUtils.hasText(lançamentoFilter.getDescricao())){
+        if(!StringUtils.isEmpty(lançamentoFilter.getDescricao())){
             predicates.add(builder.like(
-                builder.lower(root. get("descrição")), "%" + lançamentoFilter.getDescricao().toLowerCase() + "%"));
+                builder.lower(root. get("descricao")), "%" + lançamentoFilter.getDescricao().toLowerCase() + "%"));
         }
 
         if(lançamentoFilter.getDataVencimentoDe() != null){
@@ -58,7 +57,7 @@ public class LançamentoRepositoryImpl implements LançamentoRepositoryQuery<Lan
 
         if(lançamentoFilter.getDataVencimentoAte() != null){
             predicates.add(
-                builder.greaterThanOrEqualTo(root.get("dataVencimento"), lançamentoFilter.getDataVencimentoAte()));
+                builder.lessThanOrEqualTo(root.get("dataVencimento"), lançamentoFilter.getDataVencimentoAte()));
         }
 
 
