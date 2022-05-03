@@ -31,11 +31,11 @@ public class Lançamento {
 
     @NotNull
     @Column(name = "data_vencimento")
-    private LocalDate datavencimento;
+    private LocalDate dataVencimento;
 
     @Future
     @Column(name = "data_pagamento")
-    private LocalDate datapagamento;
+    private LocalDate dataPagamento;
 
     @NotNull
     private BigDecimal valor;
@@ -70,16 +70,16 @@ public class Lançamento {
         this.descricao = descricao;
     }
     public LocalDate getDatavencimento() {
-        return datavencimento;
+        return dataVencimento;
     }
-    public void setDatavencimento(LocalDate datavencimento) {
-        this.datavencimento = datavencimento;
+    public void setDatavencimento(LocalDate dataVencimento) {
+        this.dataVencimento = dataVencimento;
     }
-    public LocalDate getDatapagamento() {
-        return datapagamento;
+    public LocalDate getDataPagamento() {
+        return dataPagamento;
     }
-    public void setDatapagamento(LocalDate datapagamento) {
-        this.datapagamento = datapagamento;
+    public void setDataPagamento(LocalDate dataPagamento) {
+        this.dataPagamento = dataPagamento;
     }
     public BigDecimal getValor() {
         return valor;
