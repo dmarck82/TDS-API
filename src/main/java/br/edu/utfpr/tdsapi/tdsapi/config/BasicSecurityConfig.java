@@ -8,6 +8,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.annotation.web.servlet.configuration.EnableWebMvcSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 
+@SuppressWarnings("deprecation")
 @Profile("basic-security")
 @Configuration
 @EnableWebMvcSecurity

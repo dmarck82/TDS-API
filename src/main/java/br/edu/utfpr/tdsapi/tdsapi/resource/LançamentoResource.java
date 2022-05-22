@@ -15,6 +15,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -52,11 +53,13 @@ public class LançamentoResource {
 
 
     @GetMapping
+    @PreAuthorize("hasAuthority('ROLE_PESQUISAR_LANCAMENTO') and #oauth2.hasScope('read')")
     public Page<Lançamento> pesquisar(LançamentoFilter lançamentoFilter, Pageable pageable) {
         return lançamentoRepository.filtrar(lançamentoFilter, pageable);
     }
 
     @GetMapping("/{codigo}")
+    @PreAuthorize("hasAuthority('ROLE_PESQUISAR_LANCAMENTO') and #oauth2.hasScope('read')")
     public ResponseEntity <Lançamento> buscarPeloCodigo(@PathVariable Long codigo){
         
         Optional<Lançamento> lançamento= this.lançamentoRepository.findById(codigo);
@@ -65,6 +68,7 @@ public class LançamentoResource {
     }
 
     @PostMapping
+    @PreAuthorize("hasAuthority('ROLE_CADASTRAR_LANCAMENTO') and #oauth2.hasScope('write')")
     public ResponseEntity<Lançamento> criar(@Valid @RequestBody Lançamento lançamento, HttpServletResponse response){
         
         Lançamento lançamentoSalvo = lançamentoService.salvar(lançamento);
@@ -83,6 +87,7 @@ public class LançamentoResource {
     }
 
     @DeleteMapping("/{codigo}")
+    @PreAuthorize("hasAuthority('ROLE_REMOVER_LANCAMENTO') and #oauth2.hasScope('write')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deletarPeloCodigo(@PathVariable Long codigo){
         
@@ -90,6 +95,7 @@ public class LançamentoResource {
     }
 
     @PutMapping("/{codigo}")
+    @PreAuthorize("hasAuthority('ROLE_CADASTRAR_LANCAMENTO') and #oauth2.hasScope('write')")
     public ResponseEntity<Lançamento> atualizar(@PathVariable Long codigo, @Valid @RequestBody Lançamento lançamento){
 
         Lançamento lançamentoSalvo = lançamentoService.atualizar(codigo, lançamento);

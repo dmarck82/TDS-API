@@ -19,6 +19,7 @@ import org.springframework.util.StringUtils;
 import br.edu.utfpr.tdsapi.tdsapi.model.Lançamento;
 import br.edu.utfpr.tdsapi.tdsapi.repository.filter.LançamentoFilter;
 
+@SuppressWarnings("deprecation")
 public class LançamentoRepositoryImpl implements LançamentoRepositoryQuery{
 
     @PersistenceContext
